@@ -1,32 +1,8 @@
 //con * importamos todos los servicios desde services
 import * as service from "../services/users.services.js";
-  
-export const createFileUsersCtll = async (req, res, next) => {
-  try {
-    const newUsers = await service.createFileUserServ();
-    if (!newUsers) throw new Error("Validation Error!");
-    else res.json(newUsers);
-  } catch (error) {
-    next(error);
-  }
-};
+import UserDaoMongoDB from "../daos/mongodb/users.dao.js";
+const userDao = new UserDaoMongoDB();
 
-export const getByNameUserCtll = async (req, res, next) => {
-  try {
-    const { first_name } = req.query;
-    const doc = await service.getByNameUserServ(first_name);
-    if (!doc) {
-      throw new Error("User not found!")
-    } else {
-      res.json(doc);
-    };
-
-  } catch (error) {
-    next(error);
-  }
-};
-
-//busqueda por parametro
 export const getByEmailUserCtll = async (req, res, next) => {
   try {
     const { email } = req.params;
@@ -41,63 +17,100 @@ export const getByEmailUserCtll = async (req, res, next) => {
   }
 };
 
-export const getAllUsersCtll = async (req, res, next) => {
-try {
-    const docs = await service.getAllUsersServ();
-    res.json(docs);
-} catch (error) {
-    next(error);
-}
-};
-
-export const aggregation1 = async (req, res, next) => {
+export const registerResponse = (req, res, next)=>{
   try {
-    // const { gender } = req.query
-    const response = await service.aggregation1();
-    res.json(response);
+      res.json({
+          msg: 'Register OK',
+          session: req.session    // --> passport.user: id mongo
+      })
   } catch (error) {
       next(error);
   }
 };
 
-export const createUserCtll = async (req, res, next) => {
-try {
-    const user = { ...req.body };
-    const newUser = await service.createUserServ(user);
-    if (!newUser) {
-      res.redirect('/views/error-register');
-    } else {
-      res.redirect('/views')
-    }
-} catch (error) {
-    next(error);
-}
-};
+// export const createUserCtll = async (req, res, next) => {
+// try {
+//     const user = { ...req.body };
+//     const newUser = await service.createUserServ(user);
+//     if (!newUser) {
+//       res.redirect('/views/error-register');
+//     } else {
+//       res.redirect('/views')
+//     }
+// } catch (error) {
+//     next(error);
+// }
+// };
 
-export const loginUserCtll = async (req, res, next) => {
+//createUserCtll para views no funciona
+// export const createUserCtll = async (req, res, next) => {
+//   try {
+//     const user = { ...req.body };
+//     const newUser = await service.createUserServ(user);
+//     if (!newUser) {
+//       res.status(404).json({ error: "User not created" });
+//     } else {
+//       res.status(201).json(newUser);
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+//createUserCtll para views gena no funciona
+// export const createUserCtll = async (req, res, next) =>{
+//   try {
+//       const session = req.session
+//       if(!session){
+//           res.status(404).redirect('/views/error-register')
+//       } else{
+//           res.status(304).redirect('/views/login');
+//       };
+//   } catch (error) {
+//       next()
+//   };
+// };
+
+// export const loginUserCtll = async (req, res, next) => {
+//   try {
+//     const { email, password } = req.body;
+//     const user = await service.loginUserServ(email, password);
+//     if (!user) {
+//       res.redirect('/views/error-login');
+//     } else {
+//       req.session.email = email;
+//       req.session.password = password;
+//       res.redirect('/views/profile')
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+export const loginResponse = async(req, res, next)=>{
   try {
-    const { email, password } = req.body;
-    const user = await service.loginUserServ(email, password);
-    if (!user) {
-      res.redirect('/views/error-login');
-    } else {
-      req.session.email = email;
-      req.session.password = password;
-      // req.session.firstName = userData.first_name;
-      // req.session.lastName = userData.last_name;
-
-      res.redirect('/views/profile')
-    }
+      const user = await userDao.getUserById(req.session.passport.user);
+      const { first_name, last_name, email, age, role } = user;
+      res.json({
+          msg: 'Login OK',
+          session: req.session,
+          userData: {
+              first_name,
+              last_name,
+              email,
+              age,
+              role
+          }
+      })
   } catch (error) {
-    next(error);
+      next(error);
   }
-};
-
+}
 
 export const updateUserCtll = async (req, res, next) => {
 try {
     const { id } = req.params;
-    const { first_name, last_name, email, gender, age, password, role } = req.body;
+    const { first_name, last_name, email, age, password, role } = req.body;
 
     let doc = await service.getByIdUserServ(id);
 
@@ -107,7 +120,6 @@ try {
     first_name,
     last_name,
     email,
-    gender,
     age,
     password,
     role

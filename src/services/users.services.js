@@ -4,48 +4,6 @@ import fs  from 'fs';
 import {__dirname} from '../path.js';
 const usersFile = JSON.parse(fs.readFileSync(__dirname+'/data/users.json', 'utf-8'));
 
-//createFileUser llama al array de usuarios 
-export const createFileUserServ = async () => {
-    try {
-        const newUser = await userDao.createUser(usersFile);
-        console.log('¡Users saved!');
-        if (!newUser) throw new Error("Validation Error!");
-        else return { message: 'Users saved!' };
-    } catch (error) {
-        console.log(error);
-    }
-};
-
-export const getAllUsersServ = async () => {
-  try {
-    const doc = await userDao.getAllUsers();
-    if (!doc) throw new Error("User not found!");
-    else return doc;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const aggregation1 = async () => {
-  try {
-    const doc = await userDao.aggregation1();
-    return doc
-  } catch (error) {
-    console.log(error);    
-  }
-};
-
-
-export const getByNameUserServ = async (name) => {
-  try {
-    const doc = await userDao.getUserByName(name);
-    if (!doc) throw new Error("User not found!");
-    else return doc;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const getByEmailUserServ = async (email) => {
   try {
     const doc = await userDao.getUserByEmail(email);
@@ -74,7 +32,6 @@ export const loginUserServ = async (email, password) => {
     throw new Error('Login failed');
   }
 };
-
 
 export const updateUserServ = async (id, obj) => {
   try {

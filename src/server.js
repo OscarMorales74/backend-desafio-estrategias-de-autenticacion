@@ -9,6 +9,8 @@ import viewsRouter from './routes/views.router.js';
 import mongoStore from 'connect-mongo';
 import handlebars from 'express-handlebars';
 import { errorHandler } from './middlewares/errorHandler.js';
+import passport from 'passport';
+import './passport/local.strategies.js';
 import { __dirname } from './path.js';
 import './db/db.js';
 // import { Server } from 'socket.io';
@@ -47,6 +49,11 @@ app.use('/views', viewsRouter)
 // app.use('/messages', viewsRouter)
 
 app.use(errorHandler);
+//inicializamos passport a nivel de aplicacion
+app.use(passport.initialize());
+//vinculamos passport con express-session
+app.use(passport.session());
+
 
 const PORT = 8080;
 app.listen(PORT, ()=>
