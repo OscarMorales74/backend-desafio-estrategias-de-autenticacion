@@ -11,6 +11,7 @@ import handlebars from 'express-handlebars';
 import { errorHandler } from './middlewares/errorHandler.js';
 import passport from 'passport';
 import './passport/local.strategies.js';
+import './passport/github.strategies.js';
 import { __dirname } from './path.js';
 import './db/db.js';
 // import { Server } from 'socket.io';
@@ -57,7 +58,7 @@ app.use(passport.session());
 
 const PORT = 8080;
 app.listen(PORT, ()=>
-console.log(`server de desafio 22 ok on port ${PORT}`)
+console.log(`server de desafio de clase 22 ok on port ${PORT}`)
 );
 
 // const socketServer = new Server(httpServer);

@@ -1,7 +1,6 @@
 {
   "name": "22a-desafio-estrategias-de-autenticacion",
   "version": "1.0.0",
-  "description": "",
   "main": "src/server.js",
   "type": "module",
   "scripts": {
@@ -23,6 +22,8 @@
     "morgan": "^1.10.0",
     "nodemon": "^2.0.22",
     "passport": "^0.6.0",
+    "passport-github2": "^0.1.12",
     "passport-local": "^1.0.0"
-  }
+  },
+  "description": ""
 }

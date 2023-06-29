@@ -11,7 +11,10 @@ router.post('/register', passport.authenticate('register'), controller.registerR
 
 router.post('/login', passport.authenticate('login'), controller.loginResponse);
 
-// router.get('/logout', controller.logoutUserCtll);
+//scope extrae los datos
+router.get('/register-github', passport.authenticate('github', { scope: [ 'user:email' ] }));
+
+router.get('/profile-github', passport.authenticate('github', { scope: [ 'user:email' ]}), (req, res) => {res.send('ok')});
 
 router.get('/email/:email', controller.getByEmailUserCtll);
 
